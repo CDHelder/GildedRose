@@ -24,6 +24,7 @@ namespace GildedRose.Business
             };
         }
 
+        //TODO: Refactor
         public void UpdateQuality()
         {
             for (var i = 0; i < Items.Count; i++)
