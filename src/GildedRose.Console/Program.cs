@@ -14,6 +14,7 @@ namespace GildedRose.Console
                 System.Console.WriteLine($"Name: {item.Name}, Quality: {item.Quality}, Sellin: {item.SellIn}");
             }
 
+
             System.Console.ReadKey();
 
         }
