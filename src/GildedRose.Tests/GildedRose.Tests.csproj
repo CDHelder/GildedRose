@@ -66,6 +66,16 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\GildedRose.Business\GildedRose.Business.csproj">
+      <Project>{CAC0CA2D-F80B-4E47-8524-CACE65C1933F}</Project>
+      <Name>GildedRose.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GildedRose.Domain\GildedRose.Domain.csproj">
+      <Project>{5B2770AB-ACCE-4DD2-9F2F-8F95C10A92D2}</Project>
+      <Name>GildedRose.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

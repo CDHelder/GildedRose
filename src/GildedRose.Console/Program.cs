@@ -9,14 +9,27 @@ namespace GildedRose.Console
             System.Console.WriteLine("OMGHAI!");
 
             ItemService itemService = new ItemService();
-            foreach (var item in itemService.Items)
-            {
-                System.Console.WriteLine($"Name: {item.Name}, Quality: {item.Quality}, Sellin: {item.SellIn}");
-            }
 
+            System.Console.WriteLine("~~~~~~~~~~~~~~~~~~~~BEFORE~~~~~~~~~~~~~~~~~~~");
+            WriteItemsPropertiesAndValues(itemService);
+
+            itemService.UpdateQuality();
+
+            System.Console.WriteLine("~~~~~~~~~~~~~~~~~~~~AFTER~~~~~~~~~~~~~~~~~~~");
+            WriteItemsPropertiesAndValues(itemService);
 
             System.Console.ReadKey();
 
+        }
+
+        private static void WriteItemsPropertiesAndValues(ItemService itemService)
+        {
+            System.Console.WriteLine();
+
+            foreach (var item in itemService.Items)
+            {
+                System.Console.WriteLine($"Name: {item.Name}\nQuality: {item.Quality}\nSellin: {item.SellIn}\n");
+            }
         }
     }
 }
