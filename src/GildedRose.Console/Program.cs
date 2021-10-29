@@ -13,7 +13,7 @@ namespace GildedRose.Console
             System.Console.WriteLine("~~~~~~~~~~~~~~~~~~~~BEFORE~~~~~~~~~~~~~~~~~~~");
             WriteItemsPropertiesAndValues(itemService);
 
-            itemService.UpdateQuality();
+            //itemService.UpdateQuality();
 
             System.Console.WriteLine("~~~~~~~~~~~~~~~~~~~~AFTER~~~~~~~~~~~~~~~~~~~");
             WriteItemsPropertiesAndValues(itemService);
@@ -26,10 +26,10 @@ namespace GildedRose.Console
         {
             System.Console.WriteLine();
 
-            foreach (var item in itemService.Items)
-            {
-                System.Console.WriteLine($"Name: {item.Name}\nQuality: {item.Quality}\nSellin: {item.SellIn}\n");
-            }
+            //foreach (var item in itemService.Items)
+            //{
+            //    System.Console.WriteLine($"Name: {item.Name}\nQuality: {item.Quality}\nSellin: {item.SellIn}\n");
+            //}
         }
     }
 }
