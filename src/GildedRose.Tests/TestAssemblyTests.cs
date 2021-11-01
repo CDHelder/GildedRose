@@ -14,7 +14,6 @@ namespace GildedRose.Tests
             itemService = new ItemService();
         }
 
-        //TODO: Voeg ""Conjured" items degrade in Quality twice as fast as normal items" toe
         [Theory]
         [InlineData(3, 6, "Conjured Mana Cake")]
         public void ConjuredItemsDegradeTwiceAsFast(int startSellValue, int startQualityValue, string name)
@@ -45,6 +44,7 @@ namespace GildedRose.Tests
                 var previousValue = items[0].Quality;
                 itemService.UpdateQuality(items);
 
+                //TODO: Maak van deze if else statements inlinedatas
                 if (items[0].SellIn > 10)
                     if (items[0].Quality != previousValue + 1) increaseCondition = false;
                 else if (items[0].SellIn <= 10 && items[0].SellIn > 5)
@@ -132,39 +132,35 @@ namespace GildedRose.Tests
 
         //TODO: Gericht op edge cases de Tests maken
         [Theory]
-        [InlineData(10, 20, "+5 Dexterity Vest")]
-        [InlineData(2, 0, "Aged Brie")]
-        [InlineData(5, 7, "Elixir of the Mongoose")]
-        [InlineData(0, 80, "Sulfuras, Hand of Ragnaros")]
-        [InlineData(15, 20, "Backstage passes to a TAFKAL80ETC concert")]
-        [InlineData(3, 6, "Conjured Mana Cake")]
-        public void TestQualityNeverNegative(int startSellValue, int startQualityValue, string name)
+        [InlineData("+5 Dexterity Vest")]
+        [InlineData("Aged Brie")]
+        [InlineData("Elixir of the Mongoose")]
+        [InlineData("Sulfuras, Hand of Ragnaros")]
+        [InlineData("Backstage passes to a TAFKAL80ETC concert")]
+        [InlineData("Conjured Mana Cake")]
+        public void TestQualityNeverNegative(string name)
         {
-            List<Item> items = new List<Item> { new Item { Name = name, Quality = startQualityValue, SellIn = 0 } };
+            List<Item> items = new List<Item> { new Item { Name = name, Quality = 0, SellIn = 0 } };
             var valueNegative = items[0].Quality >= 0;
 
-            for (int i = 0; i < 50; i++)
-            {
-                itemService.UpdateQuality(items);
-                if (items[0].Quality < 0)
-                    valueNegative = false;
-            }
+            itemService.UpdateQuality(items);
+            if (items[0].Quality < 0)
+                valueNegative = false;
 
             Assert.True(valueNegative);
         }
 
         [Theory]
-        [InlineData(20, "+5 Dexterity Vest")]
-        [InlineData(7, "Elixir of the Mongoose")]
-        [InlineData(6, "Conjured Mana Cake")]
-        public void TestSaleDatePassedQualityDegradesTwiceAsFastTrue(int startQualityValue, string name)
+        [InlineData(20, "+5 Dexterity Vest", 18)]
+        [InlineData(7, "Elixir of the Mongoose", 5)]
+        [InlineData(6, "Conjured Mana Cake", 2)]
+        public void TestSaleDatePassedQualityDegradesTwiceAsFastTrue(int startQualityValue, string name, int expectedQualityValue)
         {
             List<Item> items = new List<Item> { new Item { Name = name, Quality = startQualityValue, SellIn = 0 } };
-            var qualityValue = items[0].Quality - 2;
 
             itemService.UpdateQuality(items);
 
-            Assert.True(items[0].Quality == qualityValue);
+            Assert.True(items[0].Quality == expectedQualityValue);
         }
 
         [Theory]
@@ -182,12 +178,12 @@ namespace GildedRose.Tests
         }
 
         [Theory]
-        [InlineData(10, 20,"+5 Dexterity Vest", 9, 19)]
-        [InlineData(2, 0,"Aged Brie", 1, 1)]
+        [InlineData(10, 20, "+5 Dexterity Vest", 9, 19)]
+        [InlineData(2, 0, "Aged Brie", 1, 1)]
         [InlineData(5, 7, "Elixir of the Mongoose", 4, 6)]
         [InlineData(0, 80, "Sulfuras, Hand of Ragnaros", 0, 80)]
         [InlineData(15, 20, "Backstage passes to a TAFKAL80ETC concert", 14, 21)]
-        [InlineData(3, 6, "Conjured Mana Cake", 2, 5)]
+        [InlineData(3, 6, "Conjured Mana Cake", 2, 4)]
         public void TestAllConditionsOnce(int startSellValue, int startQualityValue ,string name, int sellInValue, int qualityValue)
         {
             List<Item> items = new List<Item> { new Item { Name = name, Quality = startQualityValue, SellIn = startSellValue } };
