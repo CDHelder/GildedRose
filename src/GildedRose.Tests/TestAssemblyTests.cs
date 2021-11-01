@@ -14,28 +14,73 @@ namespace GildedRose.Tests
             itemService = new ItemService();
         }
 
-        //[Theory]
-        //[InlineData(3, 100)]
-        //public void SulfarusNeverDecreasesQuality(int index, int iterations)
-        //{
-        //    var neverChanged = true;
-        //    var item = itemService.Items[index];
-        //    var consItemValue = item.Quality;
+        //TODO: Voeg ""Conjured" items degrade in Quality twice as fast as normal items" toe
+        [Theory]
+        [InlineData(3, 6, "Conjured Mana Cake")]
+        public void ConjuredItemsDegradeTwiceAsFast(int startSellValue, int startQualityValue, string name)
+        {
+            var decreaseCondition = true;
+            List<Item> items = new List<Item> { new Item { Name = name, Quality = startQualityValue, SellIn = startSellValue } };
 
-        //    for (int i = 0; i < iterations; i++)
-        //    {
-        //        itemService.UpdateQuality();
-        //        if (item.Quality != consItemValue)
-        //            neverChanged = false;
-        //    }
+            for (int i = 0; i < 50; i++)
+            {
+                var previousValue = items[0].Quality;
+                itemService.UpdateQuality(items);
+                if (items[0].Quality != previousValue - 2 && items[0].Quality > 0)
+                    decreaseCondition = false;
+            }
 
-        //    Assert.True(neverChanged);
-        //}
+            Assert.True(decreaseCondition);
+        }
+
+        [Theory]
+        [InlineData(15, 20, "Backstage passes to a TAFKAL80ETC concert")]
+        public void BackStagePassIncreaseTest(int startSellValue, int startQualityValue, string name)
+        {
+            var increaseCondition = true;
+            List<Item> items = new List<Item> { new Item { Name = name, Quality = startQualityValue, SellIn = startSellValue } };
+
+            for (int i = 0; i < 50; i++)
+            {
+                var previousValue = items[0].Quality;
+                itemService.UpdateQuality(items);
+
+                if (items[0].SellIn > 10)
+                    if (items[0].Quality != previousValue + 1) increaseCondition = false;
+                else if (items[0].SellIn <= 10 && items[0].SellIn > 5)
+                    if (items[0].Quality != previousValue + 2) increaseCondition = false;
+                else if (items[0].SellIn <= 5)
+                    if (items[0].Quality != previousValue + 3) increaseCondition = false;
+                else if (items[0].SellIn == 0)
+                    if (items[0].Quality != 0) increaseCondition = false;
+            }
+
+            Assert.True(increaseCondition);
+        }
+
+        [Theory]
+        [InlineData(0, 80, "Sulfuras, Hand of Ragnaros")]
+        public void SulfarusNeverDecreasesQuality(int startSellValue, int startQualityValue, string name)
+        {
+            var neverChanged = true;
+            List<Item> items = new List<Item> { new Item { Name = name, Quality = startQualityValue, SellIn = startSellValue } };
+
+            for (int i = 0; i < 50; i++)
+            {
+                itemService.UpdateQuality(items);
+                if (items[0].Quality != startQualityValue)
+                    neverChanged = false;
+            }
+
+            Assert.True(neverChanged);
+        }
 
         [Theory]
         [InlineData(2, 0, "Aged Brie")]
         [InlineData(15, 20, "Backstage passes to a TAFKAL80ETC concert")]
-        [InlineData(0, 80, "Sulfuras, Hand of Ragnaros")]
+        [InlineData(10, 20, "+5 Dexterity Vest")]
+        [InlineData(5, 7, "Elixir of the Mongoose")]
+        [InlineData(3, 6, "Conjured Mana Cake")]
         public void ItemQualityNeverHigherThen50True(int startSellValue, int startQualityValue, string name)
         {
             var neverHigherThen50 = true;
@@ -52,9 +97,7 @@ namespace GildedRose.Tests
         }
 
         [Theory]
-        [InlineData(10, 20, "+5 Dexterity Vest")]
-        [InlineData(5, 7, "Elixir of the Mongoose")]
-        [InlineData(3, 6, "Conjured Mana Cake")]
+        [InlineData(0, 80, "Sulfuras, Hand of Ragnaros")]
         public void ItemQualityNeverHigherThen50False(int startSellValue, int startQualityValue, string name)
         {
             var neverHigherThen50 = true;
